@@ -13,6 +13,12 @@ const state = {
         player: document.getElementById("player-field-card"),
         computer: document.getElementById("computer-field-card")
     },
+    playerSide: {
+    player1: "player-cards",
+    player1BOX: document.querySelector("#player-cards"),
+    computer: "computer-cards",
+    computerBOX: document.querySelector("#computer-cards"),
+    },
     action: {
         button: document.getElementById("next-duel"),
     }
@@ -21,8 +27,9 @@ const state = {
 
 const playerSide = {
     player1: "player-cards",
-    computer: "computer-cards"
+    computer: "computer-cards",
 }
+
 const pathImages = "./src/assets/icons/";
 
 const cardData = [
@@ -58,7 +65,7 @@ async function getRandomCardId() {
     return cardData[randomIndex].id;
 }
 
-async function creatCardImage(IdCard, fieldSide) {
+async function createCardImage(IdCard, fieldSide) {
     const cardImage = document.createElement("img");
     cardImage.setAttribute("height", "100px");
     cardImage.setAttribute("src", "./src/assets/icons/card-back.png");
@@ -80,6 +87,32 @@ async function creatCardImage(IdCard, fieldSide) {
     return cardImage;
 }
 
+async function setCardsField(cardId) {
+    await removeAllCardsImages();
+
+    let computerCardId = await getRandomCardId();
+
+    state.fieldCards.player.style.display = "block";
+    state.fieldCards.computer.style.display = "block";
+
+    state.fieldCards.player.src = cardData[cardId].img;
+    state.fieldCards.computer.src = cardData[computerCardId].img;
+
+    let duelResults = await checkDuelResults(cardId, computerCardId);
+
+    // await updateScore();
+    // await drawButton(duelResults);
+}
+
+async function removeAllCardsImages() {
+    let {computerBOX, player1BOX} =  state.playerSide;
+    let imgElements = computerBOX.querySelectorAll("img")
+    imgElements.forEach((img) => img.remove());
+
+    imgElements = player1BOX.querySelectorAll("img")
+    imgElements.forEach((img) => img.remove());
+}
+
 async function drawSelectCard(index) {
     state.cardSprites.avatar.src = cardData[index].img;
     state.cardSprites.name.innetText = cardData[index].name;
@@ -89,7 +122,7 @@ async function drawSelectCard(index) {
 async function drawCard(cardNumber, fieldSide){
     for(let i = 0; i < cardNumber; i++) {
         const randomIdCard = await getRandomCardId();
-        const cardImage = await creatCardImage(randomIdCard, fieldSide);
+        const cardImage = await createCardImage(randomIdCard, fieldSide);
 
         document.getElementById(fieldSide).appendChild(cardImage);
     }
