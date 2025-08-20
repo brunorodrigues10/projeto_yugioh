@@ -167,7 +167,7 @@ async function removeAllCardsImages() {
 
 async function drawSelectCard(index) {
     state.cardSprites.avatar.src = cardData[index].img;
-    state.cardSprites.name.innetText = cardData[index].name;
+    state.cardSprites.name.innerText = cardData[index].name;
     state.cardSprites.type.innerText = "Attribute : " + cardData[index].type;
 }
 
